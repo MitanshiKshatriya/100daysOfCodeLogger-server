@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router();
+const auth = require('../../middleware/auth')
 
 //Item Model
 const Log = require('../../models/Logs')
@@ -8,7 +9,7 @@ const Log = require('../../models/Logs')
 // @route GET api/logs
 // @desc Get All logs
 // @access Public
-router.get('/',(req,res)=>{
+router.get('/',auth,(req,res)=>{
     Log.find()
     .sort({data: -1})
     .then(items=>res.json(items))
@@ -18,7 +19,7 @@ router.get('/',(req,res)=>{
 // @route POST api/logs
 // @desc post A log
 // @access Public
-router.post('/',(req,res)=>{
+router.post('/',auth,(req,res)=>{
     const newItem = new Log({
         desc: req.body.desc
     })
@@ -30,7 +31,7 @@ router.post('/',(req,res)=>{
 // @route DELETE api/logs/:id
 // @desc Delete A log
 // @access Public
-router.delete('/:id',(req,res)=>{
+router.delete('/:id',auth,(req,res)=>{
     Log.findById(req.params.id)
     .then(item=>item.remove().then(()=>
     res.json({sucess:true})
@@ -42,7 +43,7 @@ router.delete('/:id',(req,res)=>{
 // @route POST api/logs/update
 // @desc Update a log
 // @access Public
-router.post('/update',(req,res)=>{
+router.post('/update',auth,(req,res)=>{
     const {_id,desc} = req.body
     
     Log.findOneAndUpdate({"_id":_id},{"$set":{"desc":desc}})

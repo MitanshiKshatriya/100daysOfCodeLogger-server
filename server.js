@@ -8,18 +8,26 @@ app.use(express.urlencoded());
 
 // requiring routes
 const logs = require('./routes/api/logs');
+const users = require('./routes/api/users');
+const auth = require('./routes/api/auth');
 
 
 //DB config
 const db = require('./config/keys').mongoURI
 
 // connect to Mongo
-mongoose.connect(db)
+mongoose.connect(db,{
+    useNewUrlParser:true,
+    useCreateIndex: true,
+    useUnifiedTopology:true
+})
     .then(()=>console.log('MongoDB connected...'))
     .catch(err=>console.log(err));
 
 //Use Routes
 app.use('/api/logs',logs);
+app.use('/api/users',users);
+app.use('/api/auth',auth);
 
 
 // listening on port
