@@ -47,7 +47,7 @@ router.post('/update',(req,res)=>{
     
     Log.findOneAndUpdate({"_id":_id},{"$set":{"desc":desc}})
     .then(response=>{
-        res.send({response})
+        res.json({_id:_id,desc:desc})
     })
     .catch(err=>{
         res.status(404).send({err})
