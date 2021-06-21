@@ -10,7 +10,7 @@ function auth(req,res,next){
     if(!token)
     {
         // 401 unauthorized
-        res.status(401).json({msg: 'No token, authorization denied'})
+        return res.status(401).json({msg: 'No token, authorization denied'})
     }
     try{
 // Verify token

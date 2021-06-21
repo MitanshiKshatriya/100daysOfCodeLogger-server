@@ -13,7 +13,7 @@ router.get('/',auth,(req,res)=>{
     Log.find()
     .sort({data: -1})
     .then(items=>res.json(items))
-    .catch(err=>console.log(err))
+    .catch(err=>res.status(403).json({msg:err}))
 });
 
 // @route POST api/logs
@@ -25,7 +25,7 @@ router.post('/',auth,(req,res)=>{
     })
     newItem.save()
     .then(item=>res.json(item))
-    .catch(err=>console.log(err))
+    .catch(err=>res.status(403).json({msg:err}))
 });
 
 // @route DELETE api/logs/:id
