@@ -13,6 +13,10 @@ required:true
     day:{
         type:Number,
         default:0
+    },
+    userId: {
+        type:String,
+        required:true
     }
 })
 

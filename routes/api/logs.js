@@ -10,7 +10,17 @@ const Log = require('../../models/Logs')
 // @desc Get All logs
 // @access Public
 router.get('/',auth,(req,res)=>{
-    Log.find()
+    Log.find({userId: req.user.id})
+    .sort({data: -1})
+    .then(items=>res.json(items))
+    .catch(err=>res.status(403).json({msg:err}))
+});
+
+// @route GET api/logs/:userId
+// @desc Get All logs from userId
+// @access Private
+router.get('/:userId',auth,(req,res)=>{
+    Log.find({userId:req.params.userId})
     .sort({data: -1})
     .then(items=>res.json(items))
     .catch(err=>res.status(403).json({msg:err}))
@@ -21,8 +31,10 @@ router.get('/',auth,(req,res)=>{
 // @access Public
 router.post('/',auth,(req,res)=>{
     const newItem = new Log({
-        desc: req.body.desc
+        desc: req.body.desc,
+        userId: req.user.id
     })
+
     newItem.save()
     .then(item=>res.json(item))
     .catch(err=>res.status(403).json({msg:err}))
