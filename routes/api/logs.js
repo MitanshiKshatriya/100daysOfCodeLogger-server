@@ -4,6 +4,9 @@ const auth = require('../../middleware/auth')
 
 //Item Model
 const Log = require('../../models/Logs')
+//User Model - to update days Completed.
+//https://stackoverflow.com/questions/39946436/findoneandupdate-increment-instead-of-update-in-mongoose
+const User = require('../../models/User')
 
 
 // @route GET api/logs
@@ -32,12 +35,30 @@ router.get('/:userId',auth,(req,res)=>{
 router.post('/',auth,(req,res)=>{
     const newItem = new Log({
         desc: req.body.desc,
-        userId: req.user.id
+        userId: req.user.id, 
+        // add day 
+        day: req.body.day == undefined ? 0 : req.body.day,
+        // add date
+        date: req.body.date == undefined ? new Date() : new Date(req.body.date)
     })
 
     newItem.save()
-    .then(item=>res.json(item))
-    .catch(err=>res.status(403).json({msg:err}))
+    .then(
+        item=>{
+            User.findOneAndUpdate({"_id":req.user.id},{"$inc":{"days_completed":1}})
+            .then(response=>{
+                
+            })
+            .catch(err=>{
+                console.log(err)
+                return res.status(404).send({msg:err})
+            })
+        return res.json(item)
+        })
+    .catch(err=>{
+        console.log(err)
+        res.status(403).json({msg:err})
+    })
 });
 
 // @route DELETE api/logs/:id
@@ -45,11 +66,23 @@ router.post('/',auth,(req,res)=>{
 // @access Public
 router.delete('/:id',auth,(req,res)=>{
     Log.findById(req.params.id)
-    .then(item=>item.remove().then(()=>
-    res.json({sucess:true})
+    .then(item=>item.remove().then(()=>{
+    
+    //update days_completed
+    User.findOneAndUpdate({"_id":req.user.id},{"$inc":{"days_completed":-1}})
+            .then(response=>{
+                
+            })
+            .catch(err=>{
+                return res.status(404).send({msg:err})
+            })
+
+
+    return res.json({sucess:true})
+    }
     ))
     .catch(err=> res.status(400).
-    json({sucess:false}))
+    json({msg:err}))
 });
 
 // @route POST api/logs/update
@@ -63,7 +96,7 @@ router.post('/update',auth,(req,res)=>{
         res.json({_id:_id,desc:desc})
     })
     .catch(err=>{
-        res.status(404).send({err})
+        res.status(404).send({msg:err})
     })
 })
 

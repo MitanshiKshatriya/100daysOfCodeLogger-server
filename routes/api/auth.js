@@ -42,7 +42,8 @@ router.post('/',(req,res)=>{
                         user:{
                             id: user.id,
                             name:user.name,
-                            email: user.email
+                            email: user.email,
+                            days_completed: user.days_completed
                         }
                     })
                 }
@@ -61,7 +62,10 @@ router.post('/',(req,res)=>{
 router.get('/user',auth,(req,res)=>{
 User.findById(req.user.id)
 .select('-password')
-.then(user=>res.json(user))
+.then(user=>{
+    console.log(user)
+    res.json(user)
+})
 .catch(err=>res.status(401).json({msg:err}))
 })
 
