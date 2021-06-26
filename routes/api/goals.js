@@ -38,11 +38,12 @@ reqq.body={
 // @desc POST All goals
 // @access Private
 router.post('/',auth,(req,res)=>{
-    const goals = req.body.goals
+    const goals = req.body
     const _id = req.user.id
     User.findOneAndUpdate({_id:_id},{$set:{goals:goals}})
     .then(response=>{
-        res.status(200).send(response)
+        console.log(200)
+        res.status(200).send(goals)
     })
     .catch(err=>{
         console.log(err)
