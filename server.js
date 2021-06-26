@@ -10,6 +10,7 @@ app.use(express.urlencoded());
 const logs = require('./routes/api/logs');
 const users = require('./routes/api/users');
 const auth = require('./routes/api/auth');
+const goals = require('./routes/api/goals');
 
 
 //DB config
@@ -28,6 +29,7 @@ mongoose.connect(db,{
 app.use('/api/logs',logs);
 app.use('/api/users',users);
 app.use('/api/auth',auth);
+app.use('/api/goals',goals);
 
 
 // listening on port

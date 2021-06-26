@@ -19,6 +19,14 @@ password:{
         type: Date,
         default: Date.now
     },
+    goals:[{
+        _id:String,
+        goal:String,
+        completed:{
+            type:Boolean,
+            default:false
+        }
+    }],
 days_completed:{
         type:Number,
         default:0
